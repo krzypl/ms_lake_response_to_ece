@@ -48,8 +48,6 @@ sand <- sed_prep %>%
   add_row(loi) %>% 
   mutate(param = factor(param, levels = c("sand", "LOI")))
 
-
-
 #percent diagram-------------
 conc_coef <- pollen_concentration_reference %>% 
   mutate(coef = lycopodium_ref/indicator)
