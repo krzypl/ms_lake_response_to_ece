@@ -16,11 +16,11 @@ theme_set(theme_paleo(10))
 apnap_counts <- read_csv("data/apnap_counts.csv")
 
 ap <- apnap_counts %>% 
-  select(`Pinus sylvestris type`:`Parthenocissus`) %>% 
+  select(`Pinus undiff. / Pinus sylvestris type`:`Parthenocissus`) %>% 
   mutate(ap_counts = rowSums(.))
 
 nap <- apnap_counts %>% 
-  select(!Depth & !`Pinus sylvestris type`:`Parthenocissus`) %>% 
+  select(!Depth & !`Pinus undiff. / Pinus sylvestris type`:`Parthenocissus`) %>% 
   mutate(nap_counts = rowSums(.))
 
 pollen_concentration_reference <- read_csv("data/pollen_concentration_reference.csv") %>%
@@ -50,10 +50,11 @@ sand <- sed_prep %>%
 
 #percent diagram-------------
 conc_coef <- pollen_concentration_reference %>% 
-  mutate(coef = lycopodium_ref/indicator)
+  mutate(coef = lycopodium_ref/indicator/volume)
 
 apnap_long <- apnap_counts %>% 
-  pivot_longer(!Depth, names_to = "taxon", values_to = "count")
+  pivot_longer(!Depth, names_to = "taxon", values_to = "count") %>% 
+  filter(!taxon %in% c("Unidentified pollen - corroded", "Unidentified pollen - varia")) 
 
 apnap_sum <- apnap_long %>% 
   group_by(Depth) %>% 
@@ -74,12 +75,19 @@ apnap_zero <- apnap_perc %>%
   filter(rel_abund == 0) %>% 
   summarise(nb_zero = n()) %>% 
   filter(nb_zero >= length(apnap_counts$Depth) - 1) #select taxa with at least 2 occurences 
+aqps_ter <- read_csv("data/aqps_ter.csv") %>% 
+  select(!count_sum) %>% 
+  rename(count_sum = apnap_count_sums) %>% 
+  filter(!taxon == "HdV-13")
 
 apnap_red <- apnap_perc %>% 
   filter(!taxon %in% apnap_zero$taxon) %>% 
+  add_row(aqps_ter) %>% 
   group_by(taxon) %>% 
   filter(max(rel_abund) > 2) %>% 
-  ungroup()
+  ungroup() %>% 
+  mutate(taxon = gsub("Pinus undiff. / Pinus sylvestris type",
+                             "Pinus undiff.", taxon))
 
 apnap_coniss <- apnap_red %>% 
   mutate(rel_abund_trans = rel_abund/100) %>%
@@ -92,9 +100,9 @@ apnap_plot <- apnap_red %>%
   mutate(taxon = fct_relevel(taxon, apnap_order)) %>% 
   arrange(taxon) %>% 
   ggplot(aes(x = rel_abund, y = Depth)) +
-  geom_col_segsh(color = c(rep("darkgreen", 10*42), rep("darkorange", 8*42))) + 
+  geom_col_segsh(color = c(rep("darkgreen", 11*42), rep("darkorange", 8*42), rep("brown", 4*42))) +
   geom_lineh(color = "black") +
-  facet_abundanceh(vars(taxon)) +
+  facet_abundanceh(vars(taxon), dont_italicize = (c("type", "undiff."))) +
   labs(x = "Relative abundance (%)", y = "Depth (cm)") +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
              col = "darkblue", lty = 1, alpha = 0.1, linewidth = 2) +
@@ -165,8 +173,12 @@ write_csv(apnap_prc_scores, "data/apnap_prc_scores.csv")
 #rate of change-----
 
 #below is the code necessary to reproduce RoC analysis. The computation takes a lot of time, so the output was saved in a separate file.
-
+# aqps_ter_wide <- aqps_ter %>%
+#   select(!c(count_sum,rel_abund)) %>% 
+#   pivot_wider(id_cols = Depth, names_from = taxon, values_from = count)
+# 
 # apnap_source_community <- apnap_counts %>% 
+#   left_join(aqps_ter_wide) %>% 
 #   janitor::clean_names() %>% 
 #   select(!depth) %>% 
 #   mutate(sample_id = as.character(seq(11, length(apnap_counts$Depth) + 10, by = 1))) %>% 
@@ -190,7 +202,7 @@ write_csv(apnap_prc_scores, "data/apnap_prc_scores.csv")
 #     smooth_method = "age.w",
 #     dissimilarity_coefficient = "chisq",
 #     working_units = "MW",
-#     bin_size = 30, # ~6*median of age difference between the samples
+#     bin_size = 30, #~6*median of age difference between the samples
 #     number_of_shifts = 5,
 #     standardise = TRUE,
 #     n_individuals = round(min(ap$ap_counts + nap$nap_counts)), #standardization adjusted to the smallest count sum of apnap

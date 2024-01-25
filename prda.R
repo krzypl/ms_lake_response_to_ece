@@ -79,7 +79,7 @@ set.seed(12)
 diatom_rda_all <- rda(sqrt(diatom_wide) ~ ece_effect + Age + apnap_prc, data = expl_var_full)
 
 set.seed(12)
-(diatom_R2adj_all <- RsquareAdj(diatom_rda_all)$adj.r.squared)#18.4% 
+(diatom_R2adj_all <- RsquareAdj(diatom_rda_all)$adj.r.squared)#17.4% 
 
 set.seed(12)
 (diatom_anova_all <- anova(diatom_rda_all, permutations = how(nperm = 999)))#significance level 0.001***
@@ -87,10 +87,10 @@ set.seed(12)
 diatom_rda_age <- rda(sqrt(diatom_wide) ~ Age + Condition(apnap_prc, ece_effect), data = expl_var_full)
 
 set.seed(12)
-(diatom_R2adj_age <- RsquareAdj(diatom_rda_age)$adj.r.squared)#1.8% 
+(diatom_R2adj_age <- RsquareAdj(diatom_rda_age)$adj.r.squared)#4.0% 
 
 set.seed(12)
-(diatom_anova_age <- anova(diatom_rda_age, permutations = how(nperm = 999)))#not significant
+(diatom_anova_age <- anova(diatom_rda_age, permutations = how(nperm = 999)))#significance level 0.05*
 
 diatom_rda_apnap <- rda(sqrt(diatom_wide) ~ apnap_prc + Condition(Age, ece_effect), data = expl_var_full)
 
@@ -100,56 +100,60 @@ set.seed(12)
 set.seed(12)
 (diatom_anova_apnap <- anova(diatom_rda_apnap, permutations = how(nperm = 999)))#not significant
 
-diatom_rda_tprep <- tibble("ECE_xage_xapnap" = c(diatom_R2adj, diatom_anova$`Pr(>F)`[[1]]),
-                           "apnap_xECE_xage" = c(diatom_R2adj_apnap, diatom_anova_apnap$`Pr(>F)`[[1]]),
-                           "age_xECE_xapnap" = c(diatom_R2adj_age, diatom_anova_age$`Pr(>F)`[[1]]),
-                           "all" = c(diatom_R2adj_all, diatom_anova_all$`Pr(>F)`[[1]]),
+diatom_rda_tprep <- tibble("ECE" = c(diatom_R2adj, diatom_anova$`Pr(>F)`[[1]]),
+                           "VS" = c(diatom_R2adj_apnap, diatom_anova_apnap$`Pr(>F)`[[1]]),
+                           "Age" = c(diatom_R2adj_age, diatom_anova_age$`Pr(>F)`[[1]]),
+                           "Age + VS + ECE" = c(diatom_R2adj_all, diatom_anova_all$`Pr(>F)`[[1]]),
                            "unexplained" = c(1 - diatom_R2adj_all, NA),
                            "proxy" = c("diatom", "diatom"))
 
-#telmalg rda -----
-telmalg_wide <- read_csv("data/telmalg_red.csv") %>% 
-  pivot_wider(id_cols = !count & !count_sum, names_from = "taxon", values_from = "rel_abund") %>% 
-  select(!c(Depth, apnap_count_sums))
+#aqps rda -----
+aqps_red <- read_csv("data/aqps_red.csv")
 
-telmalg_rda <- rda(sqrt(telmalg_wide) ~ ece_effect + Condition(Age, apnap_prc), data = expl_var_full)
+aqps_wide_prep <- aqps_red %>% 
+  pivot_wider(id_cols = Depth, names_from = taxon, values_from = rel_abund) %>% 
+  select(!Depth)
 
-set.seed(12)
-(telmalg_R2adj <- RsquareAdj(telmalg_rda)$adj.r.squared)#-1.1% 
+aqps_wide <- decostand(aqps_wide_prep, method = "normalize", MARGIN = 2)
 
-set.seed(12)
-(telmalg_anova <- anova(telmalg_rda, permutations = how(nperm = 999)))#not significant
-
-telmalg_rda_all <- rda(sqrt(telmalg_wide) ~ ece_effect + Age + apnap_prc, data = expl_var_full)
+aqps_rda <- rda(aqps_wide ~ ece_effect + Condition(Age, apnap_prc), data = expl_var_full)
 
 set.seed(12)
-(telmalg_R2adj_all <- RsquareAdj(telmalg_rda_all)$adj.r.squared)#8.9% 
+(aqps_R2adj <- RsquareAdj(aqps_rda)$adj.r.squared)#-0.2% 
 
 set.seed(12)
-(telmalg_anova_all <- anova(telmalg_rda_all, permutations = how(nperm = 999)))#significant at p 0.05
+(aqps_anova <- anova(aqps_rda, permutations = how(nperm = 999)))#not significant
 
-telmalg_rda_age <- rda(sqrt(telmalg_wide) ~ Age + Condition(apnap_prc, ece_effect), data = expl_var_full)
-
-set.seed(12)
-(telmalg_R2adj_age <- RsquareAdj(telmalg_rda_age)$adj.r.squared)#0% 
+aqps_rda_all <- rda(aqps_wide ~ ece_effect + Age + apnap_prc, data = expl_var_full)
 
 set.seed(12)
-(telmalg_anova_age <- anova(telmalg_rda_age, permutations = how(nperm = 999)))#not significant
-
-telmalg_rda_apnap <- rda(sqrt(telmalg_wide) ~ apnap_prc + Condition(Age, ece_effect), data = expl_var_full)
+(aqps_R2adj_all <- RsquareAdj(aqps_rda_all)$adj.r.squared)#22.6% 
 
 set.seed(12)
-(telmalg_R2adj_apnap <- RsquareAdj(telmalg_rda_apnap)$adj.r.squared)#-1.7% 
+(aqps_anova_all <- anova(aqps_rda_all, permutations = how(nperm = 999)))#significant at p 0.01**
+
+aqps_rda_age <- rda(aqps_wide ~ Age + Condition(apnap_prc, ece_effect), data = expl_var_full)
 
 set.seed(12)
-(telmalg_anova_apnap <- anova(telmalg_rda_apnap, permutations = how(nperm = 999)))#not significant
+(aqps_R2adj_age <- RsquareAdj(aqps_rda_age)$adj.r.squared)#2.3% 
 
-telmalg_rda_tprep <- tibble("ECE_xage_xapnap" = c(telmalg_R2adj, telmalg_anova$`Pr(>F)`[[1]]),
-                            "apnap_xECE_xage" = c(telmalg_R2adj_apnap, telmalg_anova_apnap$`Pr(>F)`[[1]]),
-                            "age_xECE_xapnap" = c(telmalg_R2adj_age, telmalg_anova_age$`Pr(>F)`[[1]]),
-                            "all" = c(telmalg_R2adj_all, telmalg_anova_all$`Pr(>F)`[[1]]),
-                            "unexplained" = c(1 - telmalg_R2adj_all, NA),
-                            "proxy" = c("telmalg", "telmalg"))
+set.seed(12)
+(aqps_anova_age <- anova(aqps_rda_age, permutations = how(nperm = 999)))#level of significance 0.05*
+
+aqps_rda_apnap <- rda(aqps_wide ~ apnap_prc + Condition(Age, ece_effect), data = expl_var_full)
+
+set.seed(12)
+(aqps_R2adj_apnap <- RsquareAdj(aqps_rda_apnap)$adj.r.squared)#1.3% 
+
+set.seed(12)
+(aqps_anova_apnap <- anova(aqps_rda_apnap, permutations = how(nperm = 999)))#not significant
+
+aqps_rda_tprep <- tibble("ECE" = c(aqps_R2adj, aqps_anova$`Pr(>F)`[[1]]),
+                            "VS" = c(aqps_R2adj_apnap, aqps_anova_apnap$`Pr(>F)`[[1]]),
+                            "Age" = c(aqps_R2adj_age, aqps_anova_age$`Pr(>F)`[[1]]),
+                            "Age + VS + ECE" = c(aqps_R2adj_all, aqps_anova_all$`Pr(>F)`[[1]]),
+                            "unexplained" = c(1 - aqps_R2adj_all, NA),
+                            "proxy" = c("aqps", "aqps"))
 
 #clado rda ------
 clado_wide <- read_csv("data/clado_red.csv") %>% 
@@ -188,42 +192,52 @@ set.seed(12)
 set.seed(12)
 (clado_anova_apnap <- anova(clado_rda_apnap, permutations = how(nperm = 999)))#not significant
 
-clado_rda_tprep <- tibble("ECE_xage_xapnap" = c(clado_R2adj, clado_anova$`Pr(>F)`[[1]]),
-                          "apnap_xECE_xage" = c(clado_R2adj_apnap, clado_anova_apnap$`Pr(>F)`[[1]]),
-                          "age_xECE_xapnap" = c(clado_R2adj_age, clado_anova_age$`Pr(>F)`[[1]]),
-                          "all" = c(clado_R2adj_all, clado_anova_all$`Pr(>F)`[[1]]),
+clado_rda_tprep <- tibble("ECE" = c(clado_R2adj, clado_anova$`Pr(>F)`[[1]]),
+                          "VS" = c(clado_R2adj_apnap, clado_anova_apnap$`Pr(>F)`[[1]]),
+                          "Age" = c(clado_R2adj_age, clado_anova_age$`Pr(>F)`[[1]]),
+                          "Age + VS + ECE" = c(clado_R2adj_all, clado_anova_all$`Pr(>F)`[[1]]),
                           "unexplained" = c(1 - clado_R2adj_all, NA),
                           "proxy" = c("clado", "clado"))
 
 #tabele RDA ----
 rda_table <- diatom_rda_tprep[1,] %>% 
-  add_row(telmalg_rda_tprep[1,]) %>% 
+  add_row(aqps_rda_tprep[1,]) %>% 
   add_row(clado_rda_tprep[1,]) %>% 
   pivot_longer(!proxy, 
                names_to = "category", values_to = "proportion_of_v_expl") %>% 
-  mutate(proxy = factor(proxy, levels = c("telmalg","diatom", "clado")),
-         category = factor(category, levels = c("age_xECE_xapnap", "apnap_xECE_xage", "ECE_xage_xapnap", "all", "unexplained")))
+  mutate(category = factor(category, levels = c("Age", "VS", "ECE", "Age + VS + ECE", "unexplained"))) %>%
+  mutate(proxy = gsub("diatom", "Diatoms", proxy),
+         proxy = gsub("aqps", "AqPS", proxy),
+         proxy = gsub("clado", "Cladoceran", proxy),
+         proxy = factor(proxy, levels = c("AqPS","Diatoms", "Cladoceran"))) %>% 
+  rename(Category = category)
 
 rda_table_sign <- diatom_rda_tprep[2,] %>% 
-  add_row(telmalg_rda_tprep[2,]) %>% 
+  add_row(aqps_rda_tprep[2,]) %>% 
   add_row(clado_rda_tprep[2,]) %>% 
   pivot_longer(!proxy, 
                names_to = "category", values_to = "pval") %>% 
-  mutate(proxy = factor(proxy, levels = c("telmalg","diatom", "clado")),
-         category = factor(category, levels = c("age_xECE_xapnap", "apnap_xECE_xage", "ECE_xage_xapnap", "all", "unexplained"))) %>% 
+  mutate(category = factor(category, levels = c("Age", "VS", "ECE", "Age + VS + ECE", "unexplained"))) %>% 
   filter(!category == "unexplained") %>% 
-  mutate(stars = cut(pval, breaks = c(-Inf, 0.001, 0.01, 0.05, Inf), label=c("***", "**", "*", "")))
+  mutate(stars = cut(pval, breaks = c(-Inf, 0.001, 0.01, 0.05, Inf), label=c("***", "**", "*", ""))) %>% 
+  mutate(proxy = gsub("diatom", "Diatoms", proxy),
+         proxy = gsub("aqps", "AqPS", proxy),
+         proxy = gsub("clado", "Cladoceran", proxy),
+         proxy = factor(proxy, levels = c("AqPS","Diatoms", "Cladoceran"))) %>% 
+  rename(Category = category)
 
-rda_prop_var_plot <- ggplot(rda_table, aes(x = proxy, y = proportion_of_v_expl, fill = category)) +
+rda_prop_var_plot <- ggplot(rda_table, aes(x = proxy, y = proportion_of_v_expl, fill = Category)) +
   geom_col(position = "dodge") +
   scale_fill_viridis_d(labels = c("Age", "Vegetation shifts (VS)", "Extreme coastal events (ECE)",
                                   "Age + VS + ECE", "Unexplained")) +
   labs(x = "", y = "Proportion of variance explained")#+
 
-rda_pval_plot <- ggplot(rda_table_sign, aes(x = proxy, y = category, color = "white")) +
+rda_pval_plot <- ggplot(rda_table_sign, aes(x = proxy, y = Category, color = "white")) +
   geom_tile() + 
   scale_y_discrete(limits=rev) +
-  geom_text(aes(label=stars), color="white", size=5)
+  geom_text(aes(label=stars), color="white", size=5) +
+  theme(legend.position = "none") +
+  labs(x = NULL)
 
 rda_wrap_plot <- wrap_plots(
   rda_prop_var_plot,

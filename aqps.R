@@ -6,6 +6,7 @@ library(tidypaleo)
 library(patchwork)
 library(analogue)
 library(ggvegan)
+library(vegan)
 library(ggrepel)
 library(janitor)
 library(RRatepol)
@@ -66,10 +67,10 @@ aqps_zero <- aqps_perc %>%
   filter(nb_zero >= length(aqps_counts$Depth) - 1) #select taxa with at least 2 occurences 
 
 aqps_aq <- aqps_perc %>% 
-  filter(taxon %in% c("Utricularia", "Potamogeton subgen. Eupotamogeton", "Ruppia maritima", "Elodea", "Nuphar", "Utricularia - hair", "Myriophyllum", "Isoetes", "Scenedesmus", "Pediastrum", "Botryococcus", "Tetraedron", "Zygnemataceae", "Dinoflagellata", "HdV-128A", "HdV-128B"))
+  filter(taxon %in% c("Utricularia", "Potamogeton subgen. Eupotamogeton", "Ruppia maritima", "Elodea", "Nuphar", "Utricularia - hair", "Myriophyllum", "Isoetes", "Scenedesmus", "Pediastrum", "Botryococcus", "Tetraedron", "Zygnemataceae", "Dinoflagellata", "HdV-128A", "HdV-128B")) #select aquatics
 
 aqps_ter <- aqps_perc %>% 
-  filter(!taxon %in% unique(aqps_aq$taxon))
+  filter(!taxon %in% unique(aqps_aq$taxon)) #select spores of terrestrial
 
 write_csv(aqps_ter, "data/aqps_ter.csv")
 
@@ -81,10 +82,18 @@ aqps_red <- aqps_aq %>%
 
 write_csv(aqps_red, "data/aqps_red.csv")
 
-aqps_coniss <- aqps_red %>%
-  mutate(rel_abund_trans = rel_abund/100) %>% 
-  nested_data(qualifiers = Depth, key = taxon, value = rel_abund_trans,
-              trans = sqrt) %>% 
+aqps_red_trans_prep <- aqps_red %>% 
+  pivot_wider(id_cols = Depth, names_from = taxon, values_from = rel_abund) %>% 
+  select(!Depth)
+
+aqps_red_trans <- decostand(aqps_red_trans_prep, method = "normalize", MARGIN = 2) %>% 
+  mutate(Depth = aqps_counts$Depth) %>% 
+  pivot_longer(!Depth, names_to = "taxon", values_to = "rel_abund_norm")
+  
+
+aqps_coniss <- aqps_red_trans %>% 
+  nested_data(qualifiers = Depth, key = taxon, value = rel_abund_norm,
+              trans = identity) %>% 
   nested_chclust_coniss()
 
 aqps_plot <- ggplot(aqps_red, aes(x = rel_abund, y = Depth)) +
@@ -123,14 +132,13 @@ tl18_adm <- age_depth_model(
   age = Age
 )
 
-aqps_prc_prep <- aqps_red %>%
-  select(Depth, taxon, rel_abund) %>% 
-  pivot_wider(id_cols = Depth, names_from = taxon, values_from = rel_abund) %>% 
+aqps_prc_prep <- aqps_red_trans %>%
+  pivot_wider(id_cols = Depth, names_from = taxon, values_from = rel_abund_norm) %>% 
   select(!Depth)
 
 set.seed(12)
 aqps_prc <- prcurve(
-  decostand(aqps_prc_prep, method = "log"),
+  aqps_prc_prep,
   method = "ca",
   smoother = smoothSpline,
   trace = TRUE,
@@ -138,14 +146,14 @@ aqps_prc <- prcurve(
   penalty = 1.4
 ) 
 
-aqps_prc# variation explained by prc = 72%
+aqps_prc# variation explained by prc = 70%
 
-aqps_prc_plot_prep <- aqps_prc_prep %>% 
+aqps_prc_plot_prep <- aqps_prc_prep %>%
   mutate(Depth = aqps_counts$Depth, prc_scores = aqps_prc$lambda) %>% 
-  pivot_longer(!Depth & !prc_scores, names_to = "taxon", values_to = "rel_abund")
+  pivot_longer(!Depth & !prc_scores, names_to = "taxon", values_to = "rel_abund_norm")
 
 aqps_prcplot <- ggplot(aqps_prc_plot_prep,
-                          aes(x = prc_scores, y = rel_abund)) +
+                          aes(x = prc_scores, y = rel_abund_norm)) +
   geom_point() +
   geom_smooth(span = 0.3, se = FALSE) +
   facet_wrap(~ taxon, nrow = 3, scales = "free_y") +
@@ -156,16 +164,16 @@ aqps_prc_scores <- aqps_counts %>%
   mutate(value = aqps_prc$lambda, param = rep("prc_score", nrow(aqps_counts)))
 
 #rate of change-----
-
 # aqps_source_community_prep <- aqps_counts %>%
-#   janitor::clean_names() %>%
-#   select(!depth)
+#   select(all_of(aqps_aq$taxon)) %>% 
+#   janitor::clean_names()
 # 
-# #weights are added to aqps counts to account for variation in pollen count sums
-# aqps_roc_weight <- aqps_sum$count_sum/(aqps_sum$count_sum + apnap_count_sums$apnap_count_sums)
+# # weights are added to aqps counts to account for variation in pollen count sums
+# aqps_roc_weight <- 
+#   rowSums(aqps_source_community_prep)/apnap_count_sums$apnap_count_sums
 # 
 # aqps_source_community <- as_tibble(aqps_source_community_prep*aqps_roc_weight) %>%
-#   mutate(sample_id = as.character(seq(11, length(apnap_counts$Depth) + 10, by = 1))) %>%
+#   mutate(sample_id = as.character(seq(11, length(aqps_counts$Depth) + 10, by = 1))) %>%
 #   relocate(sample_id)
 # 
 # aqps_source_age <- aqps_counts %>%
@@ -185,12 +193,12 @@ aqps_prc_scores <- aqps_counts %>%
 #     data_source_age = aqps_source_age,
 #     smooth_method = "age.w",
 #     dissimilarity_coefficient = "chisq",
-#     working_units = "MW", # set to "MW" to apply the "moving window"
-#     bin_size = 30, #  ~6*median of age difference between the samples
+#     working_units = "MW", #set to "MW" to apply the "moving window"
+#     bin_size = 30,   #~6*median of age difference between the samples
 #     number_of_shifts = 5,
 #     standardise = TRUE,
 #     n_individuals = round(min(rowSums(aqps_source_community[,-1]))), #standardization adjusted to the smallest weighted count sum of aqps
-#     rand = set_randomisations, # set number of randomisations
+#     rand = set_randomisations, #set number of randomisations
 #     use_parallel = FALSE
 #   )
 # 
@@ -273,14 +281,9 @@ ggsave(filename="figures/aqps_wrapped.pdf",
        units = "in")
 
 #PCA ----
-aqps_pca_prep <- aqps_perc %>% 
-  select(Depth, taxon, rel_abund) %>% 
-  pivot_wider(id_cols = Depth,
-              names_from = taxon,
-              values_from = rel_abund) %>% 
-  select(!Depth)
+aqps_pca_prep <- decostand(aqps_red_trans_prep, method = "normalize", MARGIN = 2)
 
-aqps_pca <- rda(sqrt(aqps_pca_prep)) 
+aqps_pca <- rda(aqps_pca_prep) 
 screeplot(aqps_pca, bstick = TRUE)
 
 aqps_fort <- fortify(aqps_pca, axes = c(1,2), scaling = "sites")
@@ -296,8 +299,8 @@ aqps_sel_sp <- tibble(taxon = rownames(aqps_inertcomp), inertcomp = aqps_inertco
 aqps_sp_red <- aqps_sp[which(aqps_sp$Label %in% aqps_sel_sp$taxon), ] #leave 10 taxa with the highest contrubution to the total inertia
 
 aqps_ve_prep <- aqps_pca$CA$eig / aqps_pca$tot.chi * 100
-(aqps_PC1_ve <- round(((aqps_ve_prep / sum(aqps_ve_prep))[c(1)]) * 100, digits = 1))#25.9% expl. var.
-(aqps_PC2_ve <- round(((aqps_ve_prep / sum(aqps_ve_prep))[c(2)]) * 100, digits = 1))#11.1% expl. var.
+(aqps_PC1_ve <- round(((aqps_ve_prep / sum(aqps_ve_prep))[c(1)]) * 100, digits = 1))#55.4% expl. var.
+(aqps_PC2_ve <- round(((aqps_ve_prep / sum(aqps_ve_prep))[c(2)]) * 100, digits = 1))#17.7% expl. var.
 
 aqps_pca_plot <- ggplot() +
   labs(y = paste("PC2 (", aqps_PC2_ve, "%)", sep = ""), x = paste("PC1 (", aqps_PC1_ve, "%)", sep = ""), title = "Borad Pond, TL18-2 aqps PCA plot") +
