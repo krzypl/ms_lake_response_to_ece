@@ -37,7 +37,7 @@ sand <- read_csv("https://raw.githubusercontent.com/krzypl/ms_refininig_history_
   filter(depth <= max(tl18_age$depth)) %>% 
   select(depth, Sand) %>% 
   rename(count = Sand) %>% 
-  mutate(param = "sand", unit = "number per 1 cc")
+  mutate(param = "Sand > 0.25 mm", unit = "# cm-3")
 
 #percent diagram-------
 
@@ -67,7 +67,7 @@ aqps_zero <- aqps_perc %>%
   filter(nb_zero >= length(aqps_counts$Depth) - 1) #select taxa with at least 2 occurences 
 
 aqps_aq <- aqps_perc %>% 
-  filter(taxon %in% c("Utricularia", "Potamogeton subgen. Eupotamogeton", "Ruppia maritima", "Elodea", "Nuphar", "Utricularia - hair", "Myriophyllum", "Isoetes", "Scenedesmus", "Pediastrum", "Botryococcus", "Tetraedron", "Zygnemataceae", "Dinoflagellata", "HdV-128A", "HdV-128B")) #select aquatics
+  filter(taxon %in% c("Utricularia", "Potamogeton subgen. Eupotamogeton", "Ruppia maritima", "Elodea", "Nuphar", "Utricularia - hair", "Myriophyllum", "Isoetes", "Scenedesmus", "Pediastrum", "Botryococcus", "Tetraedron", "Zygnemataceae", "Dinoflagellata", "HdV-128A", "HdV-128B", "HdV-127")) #select aquatics
 
 aqps_ter <- aqps_perc %>% 
   filter(!taxon %in% unique(aqps_aq$taxon)) #select spores of terrestrial
@@ -99,15 +99,23 @@ aqps_coniss <- aqps_red_trans %>%
 aqps_plot <- ggplot(aqps_red, aes(x = rel_abund, y = Depth)) +
   geom_col_segsh() + 
   geom_lineh() +
-  facet_geochem_gridh(vars(taxon)) +
+  facet_geochem_gridh(vars(taxon), 
+                      labeller = purrr::partial(label_species, species_facet = "taxon")) +
   labs(x = "Relative abundance (%)", y = "Depth (cm)") +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
              col = "darkblue", lty = 1, alpha = 0.1, linewidth = 2) +
   scale_y_reverse(breaks = c(breaks = seq(0, 40, by = 5)), 
                   labels = as.character(c(breaks = seq(0, 40, by = 5))),
                   expand = expansion(mult = c(0.02, 0.02))) +
-  layer_zone_boundaries(aqps_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black")
+  layer_zone_boundaries(aqps_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black") +
+  rotated_facet_labels(
+    angle = 45,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
+aqps_plot +
+  rotated_axis_labels(95, "y")
 #sand plot-----------
 
 aqps_sand_plot <- ggplot(sand, aes(x = count, y = depth)) +
@@ -118,9 +126,14 @@ aqps_sand_plot <- ggplot(sand, aes(x = count, y = depth)) +
   scale_y_reverse(breaks = c(breaks = seq(0, 40, by = 5)), 
                   labels = as.character(c(breaks = seq(0, 40, by = 5))),
                   expand = expansion(mult = c(0.02, 0.02))) +
-  facet_geochem_gridh(vars(param)) +
+  facet_geochem_gridh(vars(param), units = c("Sand > 0.25 mm" = "# cm⁻³")) +
   labs(x = NULL, y = "Depth (cm)") +
-  layer_zone_boundaries(aqps_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black")
+  layer_zone_boundaries(aqps_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black") +
+  rotated_facet_labels(
+    angle = 90,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
 #Principal curve-------
 
@@ -228,7 +241,8 @@ aqps_roc_peaks_2plot <- aqps_roc_peaks %>%
 
 aqps_adds_plot_prep <- aqps_conc %>% 
   add_row(aqps_prc_scores) %>%
-  add_row(aqps_roc_2join)
+  add_row(aqps_roc_2join) %>% 
+  mutate(param = gsub("prc_score", "PrC score", param))
   
 aqps_adds_plot <- ggplot(aqps_adds_plot_prep, aes(x = value, y = Depth)) +
   geom_lineh() +
@@ -246,10 +260,19 @@ aqps_adds_plot <- ggplot(aqps_adds_plot_prep, aes(x = value, y = Depth)) +
     age_breaks = c(2019, seq(1700, 2000, by = 20)),
     age_labels = as.character(c(2019, seq(1700, 2000, by = 20)))
   ) +
-  facet_geochem_gridh(vars(param)) +
   labs(x = NULL, y = "Depth (cm)") +
+  facet_geochem_gridh(vars(param), rotate_axis_labels = 90,
+                      units = c("Concentration" = "# cm⁻³", 
+                                "PrC score" = "70%",
+                                "RoC" = NA,
+                                "CONISS" = "Total sum \n of squares")) +
   layer_dendrogram(aqps_coniss, aes(y = Depth), param = "CONISS") +
-  layer_zone_boundaries(aqps_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black")
+  layer_zone_boundaries(aqps_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black") +
+  rotated_facet_labels(
+    angle = 90,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
 #wrap plot---------
 
@@ -303,7 +326,7 @@ aqps_ve_prep <- aqps_pca$CA$eig / aqps_pca$tot.chi * 100
 (aqps_PC2_ve <- round(((aqps_ve_prep / sum(aqps_ve_prep))[c(2)]) * 100, digits = 1))#17.7% expl. var.
 
 aqps_pca_plot <- ggplot() +
-  labs(y = paste("PC2 (", aqps_PC2_ve, "%)", sep = ""), x = paste("PC1 (", aqps_PC1_ve, "%)", sep = ""), title = "Borad Pond, TL18-2 aqps PCA plot") +
+  labs(y = paste("PC2 (", aqps_PC2_ve, "%)", sep = ""), x = paste("PC1 (", aqps_PC1_ve, "%)", sep = ""), title = "Borad Pond, TL18-2 AqPS PCA plot") +
   geom_segment(data = aqps_sp_red,
                color = "black", size = 0.7,
                aes(x = 0, y = 0, xend = PC1, yend = PC2),
@@ -319,7 +342,7 @@ aqps_pca_plot <- ggplot() +
   ggrepel::geom_text_repel(data = aqps_sp_red, color = "black",
                            size = 2.5, segment.alpha = 0,
                            aes(x = PC1, y = PC2, 
-                               label = aqps_sp_red$Label)) +
+                               label = Label)) +
   geom_vline(xintercept = 0, color = 'black', linewidth = 0.6,linetype=2) + 
   geom_hline(yintercept = 0, color = 'black', linewidth = 0.6,linetype=2) +
   theme(legend.position = "bottom", panel.background = element_rect(fill = "white", colour = "grey50"),

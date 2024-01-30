@@ -30,7 +30,8 @@ sand <- read_csv("https://raw.githubusercontent.com/krzypl/ms_refininig_history_
 #percent diagram-------------
 
 clado_long <- clado_counts %>% 
-  pivot_longer(!Depth & !volume, names_to = "taxon", values_to = "count")
+  pivot_longer(!Depth & !volume, names_to = "taxon", values_to = "count") %>% 
+  mutate(taxon = gsub("Chydorus sphaericus", "Chydorus biovatus/brevilabris", taxon))
 
 clado_sum <- clado_long %>% 
   group_by(Depth) %>% 

@@ -13,7 +13,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 0.25,Litorella,0,804,2902,0
 0.25,Sphagnum,51,804,2902,6.343283582089552
 0.25,Selaginella selaginoides,3,804,2902,0.3731343283582089
-0.25,HdV-127,0,804,2902,0
 0.25,Filicales monolete,22,804,2902,2.736318407960199
 0.25,Thelypteris,0,804,2902,0
 0.25,Polypodium,2,804,2902,0.24875621890547264
@@ -48,7 +47,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 3.75,Litorella,0,615.5,1167,0
 3.75,Sphagnum,256,615.5,1167,41.59220146222583
 3.75,Selaginella selaginoides,3,615.5,1167,0.487408610885459
-3.75,HdV-127,0,615.5,1167,0
 3.75,Filicales monolete,15,615.5,1167,2.4370430544272947
 3.75,Thelypteris,0,615.5,1167,0
 3.75,Polypodium,4,615.5,1167,0.6498781478472786
@@ -83,7 +81,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 4.25,Litorella,0,723.5,1643,0
 4.25,Sphagnum,238,723.5,1643,32.89564616447823
 4.25,Selaginella selaginoides,7,723.5,1643,0.9675190048375951
-4.25,HdV-127,0,723.5,1643,0
 4.25,Filicales monolete,20,723.5,1643,2.7643400138217
 4.25,Thelypteris,0,723.5,1643,0
 4.25,Polypodium,2,723.5,1643,0.27643400138217
@@ -118,7 +115,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 4.75,Litorella,0,705.5,3519,0
 4.75,Sphagnum,206,705.5,3519,29.199149539333806
 4.75,Selaginella selaginoides,9,705.5,3519,1.2756909992912826
-4.75,HdV-127,0,705.5,3519,0
 4.75,Filicales monolete,29,705.5,3519,4.110559886605245
 4.75,Thelypteris,0,705.5,3519,0
 4.75,Polypodium,1,705.5,3519,0.14174344436569808
@@ -153,7 +149,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 5.25,Litorella,0,738,2041,0
 5.25,Sphagnum,160,738,2041,21.680216802168022
 5.25,Selaginella selaginoides,5,738,2041,0.6775067750677507
-5.25,HdV-127,0,738,2041,0
 5.25,Filicales monolete,24,738,2041,3.2520325203252036
 5.25,Thelypteris,0,738,2041,0
 5.25,Polypodium,2,738,2041,0.27100271002710025
@@ -188,7 +183,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 5.75,Litorella,1,714.5,2549,0.13995801259622112
 5.75,Sphagnum,210,714.5,2549,29.391182645206438
 5.75,Selaginella selaginoides,3,714.5,2549,0.4198740377886634
-5.75,HdV-127,0,714.5,2549,0
 5.75,Filicales monolete,27,714.5,2549,3.778866340097971
 5.75,Thelypteris,0,714.5,2549,0
 5.75,Polypodium,2,714.5,2549,0.27991602519244224
@@ -223,7 +217,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 6.25,Litorella,0,749,1081,0
 6.25,Sphagnum,173,749,1081,23.09746328437917
 6.25,Selaginella selaginoides,7,749,1081,0.9345794392523363
-6.25,HdV-127,0,749,1081,0
 6.25,Filicales monolete,42,749,1081,5.607476635514018
 6.25,Thelypteris,1,749,1081,0.13351134846461948
 6.25,Polypodium,4,749,1081,0.5340453938584779
@@ -258,7 +251,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 6.75,Litorella,0,603,745,0
 6.75,Sphagnum,143,603,745,23.71475953565506
 6.75,Selaginella selaginoides,2,603,745,0.33167495854063017
-6.75,HdV-127,0,603,745,0
 6.75,Filicales monolete,23,603,745,3.814262023217247
 6.75,Thelypteris,0,603,745,0
 6.75,Polypodium,2,603,745,0.33167495854063017
@@ -293,7 +285,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 7.25,Litorella,0,661,1082,0
 7.25,Sphagnum,190,661,1082,28.74432677760968
 7.25,Selaginella selaginoides,1,661,1082,0.15128593040847202
-7.25,HdV-127,0,661,1082,0
 7.25,Filicales monolete,27,661,1082,4.084720121028744
 7.25,Thelypteris,0,661,1082,0
 7.25,Polypodium,1,661,1082,0.15128593040847202
@@ -328,7 +319,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 7.75,Litorella,0,696,1035,0
 7.75,Sphagnum,220,696,1035,31.60919540229885
 7.75,Selaginella selaginoides,5,696,1035,0.7183908045977011
-7.75,HdV-127,0,696,1035,0
 7.75,Filicales monolete,27,696,1035,3.8793103448275863
 7.75,Thelypteris,0,696,1035,0
 7.75,Polypodium,0,696,1035,0
@@ -363,7 +353,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 10.25,Litorella,0,692.5,1606,0
 10.25,Sphagnum,241,692.5,1606,34.8014440433213
 10.25,Selaginella selaginoides,6,692.5,1606,0.8664259927797834
-10.25,HdV-127,0,692.5,1606,0
 10.25,Filicales monolete,24,692.5,1606,3.4657039711191335
 10.25,Thelypteris,0,692.5,1606,0
 10.25,Polypodium,2,692.5,1606,0.2888086642599278
@@ -398,7 +387,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 13.25,Litorella,1,754,1440,0.1326259946949602
 13.25,Sphagnum,200,754,1440,26.525198938992045
 13.25,Selaginella selaginoides,4,754,1440,0.5305039787798408
-13.25,HdV-127,0,754,1440,0
 13.25,Filicales monolete,35,754,1440,4.641909814323608
 13.25,Thelypteris,0,754,1440,0
 13.25,Polypodium,3,754,1440,0.3978779840848806
@@ -433,7 +421,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 16.25,Litorella,0,579.5,1062,0
 16.25,Sphagnum,137,579.5,1062,23.64106988783434
 16.25,Selaginella selaginoides,1,579.5,1062,0.1725625539257981
-16.25,HdV-127,0,579.5,1062,0
 16.25,Filicales monolete,21,579.5,1062,3.62381363244176
 16.25,Thelypteris,0,579.5,1062,0
 16.25,Polypodium,2,579.5,1062,0.3451251078515962
@@ -468,7 +455,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 19.25,Litorella,0,783,2684,0
 19.25,Sphagnum,102,783,2684,13.026819923371647
 19.25,Selaginella selaginoides,7,783,2684,0.8939974457215836
-19.25,HdV-127,0,783,2684,0
 19.25,Filicales monolete,25,783,2684,3.1928480204342273
 19.25,Thelypteris,0,783,2684,0
 19.25,Polypodium,2,783,2684,0.2554278416347382
@@ -503,7 +489,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 21.75,Litorella,0,857,2302,0
 21.75,Sphagnum,78,857,2302,9.101516919486581
 21.75,Selaginella selaginoides,4,857,2302,0.4667444574095682
-21.75,HdV-127,0,857,2302,0
 21.75,Filicales monolete,52,857,2302,6.0676779463243875
 21.75,Thelypteris,0,857,2302,0
 21.75,Polypodium,5,857,2302,0.5834305717619603
@@ -538,7 +523,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 22.25,Litorella,1,735.5,1583,0.13596193065941536
 22.25,Sphagnum,131,735.5,1583,17.81101291638341
 22.25,Selaginella selaginoides,5,735.5,1583,0.6798096532970768
-22.25,HdV-127,0,735.5,1583,0
 22.25,Filicales monolete,61,735.5,1583,8.293677770224338
 22.25,Thelypteris,0,735.5,1583,0
 22.25,Polypodium,5,735.5,1583,0.6798096532970768
@@ -573,7 +557,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 22.75,Litorella,0,759,800,0
 22.75,Sphagnum,114,759,800,15.019762845849801
 22.75,Selaginella selaginoides,5,759,800,0.6587615283267457
-22.75,HdV-127,0,759,800,0
 22.75,Filicales monolete,48,759,800,6.324110671936759
 22.75,Thelypteris,0,759,800,0
 22.75,Polypodium,2,759,800,0.2635046113306983
@@ -608,7 +591,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 23.25,Litorella,0,755.5,707,0
 23.25,Sphagnum,69,755.5,707,9.133024487094639
 23.25,Selaginella selaginoides,0,755.5,707,0
-23.25,HdV-127,0,755.5,707,0
 23.25,Filicales monolete,59,755.5,707,7.809397749834547
 23.25,Thelypteris,0,755.5,707,0
 23.25,Polypodium,4,755.5,707,0.5294506949040371
@@ -643,7 +625,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 23.75,Litorella,0,699,478,0
 23.75,Sphagnum,61,699,478,8.726752503576538
 23.75,Selaginella selaginoides,2,699,478,0.28612303290414876
-23.75,HdV-127,0,699,478,0
 23.75,Filicales monolete,52,699,478,7.439198855507868
 23.75,Thelypteris,0,699,478,0
 23.75,Polypodium,1,699,478,0.14306151645207438
@@ -678,7 +659,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 24.25,Litorella,1,706.5,748,0.14154281670205238
 24.25,Sphagnum,91,706.5,748,12.880396319886767
 24.25,Selaginella selaginoides,3,706.5,748,0.42462845010615713
-24.25,HdV-127,0,706.5,748,0
 24.25,Filicales monolete,45,706.5,748,6.369426751592357
 24.25,Thelypteris,0,706.5,748,0
 24.25,Polypodium,2,706.5,748,0.28308563340410475
@@ -713,7 +693,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 24.75,Litorella,1,737,1315,0.13568521031207598
 24.75,Sphagnum,97,737,1315,13.161465400271371
 24.75,Selaginella selaginoides,2,737,1315,0.27137042062415195
-24.75,HdV-127,0,737,1315,0
 24.75,Filicales monolete,46,737,1315,6.241519674355495
 24.75,Thelypteris,0,737,1315,0
 24.75,Polypodium,1,737,1315,0.13568521031207598
@@ -748,7 +727,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 25.25,Litorella,0,691,789,0
 25.25,Sphagnum,123,691,789,17.80028943560058
 25.25,Selaginella selaginoides,4,691,789,0.5788712011577424
-25.25,HdV-127,0,691,789,0
 25.25,Filicales monolete,42,691,789,6.078147612156296
 25.25,Thelypteris,0,691,789,0
 25.25,Polypodium,3,691,789,0.43415340086830684
@@ -783,7 +761,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 25.75,Litorella,0,726,849,0
 25.75,Sphagnum,119,726,849,16.391184573002754
 25.75,Selaginella selaginoides,3,726,849,0.4132231404958678
-25.75,HdV-127,0,726,849,0
 25.75,Filicales monolete,43,726,849,5.922865013774105
 25.75,Thelypteris,0,726,849,0
 25.75,Polypodium,3,726,849,0.4132231404958678
@@ -818,7 +795,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 27.75,Litorella,0,744,1525,0
 27.75,Sphagnum,153,744,1525,20.56451612903226
 27.75,Selaginella selaginoides,5,744,1525,0.6720430107526881
-27.75,HdV-127,0,744,1525,0
 27.75,Filicales monolete,37,744,1525,4.973118279569892
 27.75,Thelypteris,0,744,1525,0
 27.75,Polypodium,1,744,1525,0.13440860215053765
@@ -853,7 +829,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 29.75,Litorella,0,579.5,3258,0
 29.75,Sphagnum,108,579.5,3258,18.636755823986196
 29.75,Selaginella selaginoides,3,579.5,3258,0.5176876617773942
-29.75,HdV-127,0,579.5,3258,0
 29.75,Filicales monolete,25,579.5,3258,4.3140638481449525
 29.75,Thelypteris,0,579.5,3258,0
 29.75,Polypodium,0,579.5,3258,0
@@ -888,7 +863,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 30.25,Litorella,1,681.5,2603,0.1467351430667645
 30.25,Sphagnum,159,681.5,2603,23.330887747615552
 30.25,Selaginella selaginoides,2,681.5,2603,0.293470286133529
-30.25,HdV-127,0,681.5,2603,0
 30.25,Filicales monolete,34,681.5,2603,4.988994864269992
 30.25,Thelypteris,0,681.5,2603,0
 30.25,Polypodium,0,681.5,2603,0
@@ -923,7 +897,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 30.75,Litorella,1,657,1933,0.15220700152207
 30.75,Sphagnum,152,657,1933,23.13546423135464
 30.75,Selaginella selaginoides,6,657,1933,0.91324200913242
-30.75,HdV-127,0,657,1933,0
 30.75,Filicales monolete,27,657,1933,4.10958904109589
 30.75,Thelypteris,0,657,1933,0
 30.75,Polypodium,1,657,1933,0.15220700152207
@@ -958,7 +931,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 31.25,Litorella,2,518.5,3485,0.3857280617164899
 31.25,Sphagnum,102,518.5,3485,19.672131147540984
 31.25,Selaginella selaginoides,0,518.5,3485,0
-31.25,HdV-127,0,518.5,3485,0
 31.25,Filicales monolete,18,518.5,3485,3.4715525554484086
 31.25,Thelypteris,0,518.5,3485,0
 31.25,Polypodium,0,518.5,3485,0
@@ -993,7 +965,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 31.75,Litorella,0,658.5,2195,0
 31.75,Sphagnum,123,658.5,2195,18.678815489749432
 31.75,Selaginella selaginoides,5,658.5,2195,0.759301442672741
-31.75,HdV-127,0,658.5,2195,0
 31.75,Filicales monolete,22,658.5,2195,3.340926347760061
 31.75,Thelypteris,0,658.5,2195,0
 31.75,Polypodium,0,658.5,2195,0
@@ -1028,7 +999,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 32.25,Litorella,3,606.5,2554,0.49464138499587795
 32.25,Sphagnum,116,606.5,2554,19.12613355317395
 32.25,Selaginella selaginoides,2,606.5,2554,0.3297609233305853
-32.25,HdV-127,0,606.5,2554,0
 32.25,Filicales monolete,37,606.5,2554,6.100577081615829
 32.25,Thelypteris,0,606.5,2554,0
 32.25,Polypodium,0,606.5,2554,0
@@ -1063,7 +1033,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 32.75,Litorella,4,697.5,2021,0.5734767025089605
 32.75,Sphagnum,151,697.5,2021,21.648745519713263
 32.75,Selaginella selaginoides,0,697.5,2021,0
-32.75,HdV-127,0,697.5,2021,0
 32.75,Filicales monolete,33,697.5,2021,4.731182795698925
 32.75,Thelypteris,0,697.5,2021,0
 32.75,Polypodium,1,697.5,2021,0.14336917562724014
@@ -1098,7 +1067,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 33.25,Litorella,0,761,11311,0
 33.25,Sphagnum,92,761,11311,12.089356110381077
 33.25,Selaginella selaginoides,1,761,11311,0.1314060446780552
-33.25,HdV-127,0,761,11311,0
 33.25,Filicales monolete,43,761,11311,5.650459921156373
 33.25,Thelypteris,0,761,11311,0
 33.25,Polypodium,0,761,11311,0
@@ -1133,7 +1101,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 33.75,Litorella,1,703.5,4736,0.14214641080312723
 33.75,Sphagnum,86,703.5,4736,12.224591329068941
 33.75,Selaginella selaginoides,1,703.5,4736,0.14214641080312723
-33.75,HdV-127,0,703.5,4736,0
 33.75,Filicales monolete,31,703.5,4736,4.4065387348969445
 33.75,Thelypteris,0,703.5,4736,0
 33.75,Polypodium,1,703.5,4736,0.14214641080312723
@@ -1168,7 +1135,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 34.25,Litorella,1,735,22172,0.13605442176870747
 34.25,Sphagnum,115,735,22172,15.646258503401361
 34.25,Selaginella selaginoides,3,735,22172,0.40816326530612246
-34.25,HdV-127,1,735,22172,0.13605442176870747
 34.25,Filicales monolete,38,735,22172,5.170068027210884
 34.25,Thelypteris,0,735,22172,0
 34.25,Polypodium,2,735,22172,0.27210884353741494
@@ -1203,7 +1169,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 34.75,Litorella,2,665.5,8133,0.30052592036063114
 34.75,Sphagnum,103,665.5,8133,15.477084898572501
 34.75,Selaginella selaginoides,2,665.5,8133,0.30052592036063114
-34.75,HdV-127,0,665.5,8133,0
 34.75,Filicales monolete,30,665.5,8133,4.507888805409467
 34.75,Thelypteris,0,665.5,8133,0
 34.75,Polypodium,0,665.5,8133,0
@@ -1238,7 +1203,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 35.25,Litorella,0,502.5,1359,0
 35.25,Sphagnum,95,502.5,1359,18.90547263681592
 35.25,Selaginella selaginoides,2,502.5,1359,0.3980099502487562
-35.25,HdV-127,0,502.5,1359,0
 35.25,Filicales monolete,14,502.5,1359,2.7860696517412937
 35.25,Thelypteris,0,502.5,1359,0
 35.25,Polypodium,1,502.5,1359,0.1990049751243781
@@ -1273,7 +1237,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 35.75,Litorella,4,802.5,7590,0.4984423676012461
 35.75,Sphagnum,113,802.5,7590,14.080996884735203
 35.75,Selaginella selaginoides,5,802.5,7590,0.6230529595015576
-35.75,HdV-127,0,802.5,7590,0
 35.75,Filicales monolete,38,802.5,7590,4.7352024922118385
 35.75,Thelypteris,0,802.5,7590,0
 35.75,Polypodium,1,802.5,7590,0.12461059190031153
@@ -1308,7 +1271,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 36.25,Litorella,0,546,2245,0
 36.25,Sphagnum,93,546,2245,17.032967032967033
 36.25,Selaginella selaginoides,2,546,2245,0.3663003663003663
-36.25,HdV-127,0,546,2245,0
 36.25,Filicales monolete,22,546,2245,4.029304029304029
 36.25,Thelypteris,0,546,2245,0
 36.25,Polypodium,0,546,2245,0
@@ -1343,7 +1305,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 36.75,Litorella,4,808,2110,0.49504950495049505
 36.75,Sphagnum,137,808,2110,16.955445544554458
 36.75,Selaginella selaginoides,7,808,2110,0.8663366336633664
-36.75,HdV-127,0,808,2110,0
 36.75,Filicales monolete,20,808,2110,2.4752475247524752
 36.75,Thelypteris,0,808,2110,0
 36.75,Polypodium,1,808,2110,0.12376237623762376
@@ -1378,7 +1339,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 37.25,Litorella,2,844,2031,0.23696682464454977
 37.25,Sphagnum,138,844,2031,16.350710900473935
 37.25,Selaginella selaginoides,2,844,2031,0.23696682464454977
-37.25,HdV-127,0,844,2031,0
 37.25,Filicales monolete,26,844,2031,3.080568720379147
 37.25,Thelypteris,0,844,2031,0
 37.25,Polypodium,1,844,2031,0.11848341232227488
@@ -1413,7 +1373,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 37.75,Litorella,0,665.5,2024,0
 37.75,Sphagnum,136,665.5,2024,20.435762584522916
 37.75,Selaginella selaginoides,3,665.5,2024,0.4507888805409466
-37.75,HdV-127,0,665.5,2024,0
 37.75,Filicales monolete,16,665.5,2024,2.404207362885049
 37.75,Thelypteris,0,665.5,2024,0
 37.75,Polypodium,1,665.5,2024,0.15026296018031557
@@ -1448,7 +1407,6 @@ Depth,taxon,count,apnap_count_sums,count_sum,rel_abund
 38.25,Litorella,1,724,2487,0.13812154696132595
 38.25,Sphagnum,142,724,2487,19.613259668508288
 38.25,Selaginella selaginoides,3,724,2487,0.4143646408839779
-38.25,HdV-127,0,724,2487,0
 38.25,Filicales monolete,21,724,2487,2.9005524861878453
 38.25,Thelypteris,0,724,2487,0
 38.25,Polypodium,0,724,2487,0

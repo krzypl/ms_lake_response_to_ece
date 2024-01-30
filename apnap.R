@@ -75,10 +75,11 @@ apnap_zero <- apnap_perc %>%
   filter(rel_abund == 0) %>% 
   summarise(nb_zero = n()) %>% 
   filter(nb_zero >= length(apnap_counts$Depth) - 1) #select taxa with at least 2 occurences 
+
 aqps_ter <- read_csv("data/aqps_ter.csv") %>% 
   select(!count_sum) %>% 
   rename(count_sum = apnap_count_sums) %>% 
-  filter(!taxon == "HdV-13")
+  filter(!taxon %in% c("HdV-1", "HdV-13", "HdV-55A", "HdV-112", "HdV-113", "HdV-205", "HdV-126 Clasterosporium caricinum", "HdV-143", "HdV-572", "Glomeromycota"))
 
 apnap_red <- apnap_perc %>% 
   filter(!taxon %in% apnap_zero$taxon) %>% 
