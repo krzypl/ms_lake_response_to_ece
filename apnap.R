@@ -44,9 +44,9 @@ loi <- sed_prep %>%
 sand <- sed_prep %>%  
   select(depth, Sand) %>% 
   rename(count = Sand) %>% 
-  mutate(param = "sand", unit = "number per 1 cc") %>% 
+  mutate(param = "Sand > 0.25 mm", unit = "# cm-3") %>% 
   add_row(loi) %>% 
-  mutate(param = factor(param, levels = c("sand", "LOI")))
+  mutate(param = factor(param, levels = c("Sand > 0.25 mm", "LOI")))
 
 #percent diagram-------------
 conc_coef <- pollen_concentration_reference %>% 
@@ -64,7 +64,7 @@ apnap_conc <- apnap_sum %>%
   left_join(conc_coef) %>% 
   mutate(Concentration = coef*count_sum) %>% 
   pivot_longer(!Depth, names_to = "param", values_to = "value") %>% 
-  filter(param == "Concentration" | param == "ap_nap_ratio")
+  filter(param == "Concentration")
 
 apnap_perc <- apnap_long %>%
   left_join(apnap_sum) %>% 
@@ -103,7 +103,7 @@ apnap_plot <- apnap_red %>%
   ggplot(aes(x = rel_abund, y = Depth)) +
   geom_col_segsh(color = c(rep("darkgreen", 11*42), rep("darkorange", 8*42), rep("brown", 4*42))) +
   geom_lineh(color = "black") +
-  facet_abundanceh(vars(taxon), dont_italicize = (c("type", "undiff."))) +
+  facet_abundanceh(vars(taxon), dont_italicize = (c("type", "undiff.", "group")), rotate_facet_labels = 90) +
   labs(x = "Relative abundance (%)", y = "Depth (cm)") +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
              col = "darkblue", lty = 1, alpha = 0.1, linewidth = 2) +
@@ -122,9 +122,14 @@ apnap_sand_plot <- ggplot(sand, aes(x = count, y = depth)) +
   scale_y_reverse(breaks = c(breaks = seq(0, 40, by = 5)), 
                   labels = as.character(c(breaks = seq(0, 40, by = 5))),
                   expand = expansion(mult = c(0.02, 0.02))) +
-  facet_geochem_gridh(vars(param)) +
+  facet_geochem_gridh(vars(param), units = c("Sand > 0.25 mm" = "# cm⁻³", "LOI" = "%")) +
   labs(x = NULL, y = "Depth (cm)") +
-  layer_zone_boundaries(apnap_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black")
+  layer_zone_boundaries(apnap_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black") +
+  rotated_facet_labels(
+    angle = 90,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
 #Principal curve-----
 
@@ -236,7 +241,8 @@ apnap_roc_peaks_2plot <- apnap_roc_peaks %>%
 #combined PrC, RoC, and pollen concentration plot----------
 apnap_adds_plot_prep <- apnap_conc %>% 
   add_row(apnap_prc_scores) %>% 
-  add_row(apnap_roc_2join)
+  add_row(apnap_roc_2join) %>% 
+  mutate(param = gsub("prc_score", "PrC score", param))
 
 apnap_adds_plot <- ggplot(apnap_adds_plot_prep, aes(x = value, y = Depth)) +
   geom_lineh() +
@@ -254,10 +260,19 @@ apnap_adds_plot <- ggplot(apnap_adds_plot_prep, aes(x = value, y = Depth)) +
     age_breaks = c(2019, seq(1700, 2000, by = 20)),
     age_labels = as.character(c(2019, seq(1700, 2000, by = 20)))
   ) +
-  facet_geochem_gridh(vars(param)) +
+  facet_geochem_gridh(vars(param), units = 
+                        c("Concentration" = "# cm⁻³",
+                          "PrC score" = "50%",
+                          "RoC" = NA,
+                          "CONISS" = "Total sum \n of squares")) +
   labs(x = NULL, y = "Depth (cm)") +
   layer_dendrogram(apnap_coniss, aes(y = Depth), param = "CONISS") +
-  layer_zone_boundaries(apnap_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black")
+  layer_zone_boundaries(apnap_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black") +
+  rotated_facet_labels(
+    angle = 90,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
 #wrap plot---------
 
@@ -284,6 +299,13 @@ ggsave(filename="figures/pollen_wrapped.svg",
 ggsave(filename="figures/pollen_wrapped.pdf",
        plot = apnap_wrapped_plots,
        device = pdf,
+       width = 12.5,
+       height = 5,
+       units = "in")
+
+ggsave(filename="figures/pollen_wrapped.jpeg",
+       plot = apnap_wrapped_plots,
+       device = jpeg,
        width = 12.5,
        height = 5,
        units = "in")

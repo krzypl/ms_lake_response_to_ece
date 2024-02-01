@@ -22,7 +22,7 @@ sand <- read_csv("https://raw.githubusercontent.com/krzypl/ms_refininig_history_
   filter(depth <= max(tl18_age$depth)) %>% 
   select(depth, Sand) %>% 
   rename(count = Sand) %>% 
-  mutate(param = "sand", unit = "number per 1 cc")
+  mutate(param = "Sand > 0.25 mm", unit = "number per 1 cc")
 
 #percent diagram-------------
 
@@ -69,7 +69,7 @@ chiro_plot <- chiro_red %>%
   ggplot(aes(x = rel_abund, y = Depth)) +
   geom_col_segsh() + 
   geom_lineh() +
-  facet_abundanceh(vars(taxon)) +
+  facet_abundanceh(vars(taxon), rotate_facet_labels = 90, dont_italicize = c("2")) +
   labs(x = "Relative abundance (%)", y = "Depth (cm)") +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
              col = "darkblue", lty = 1, alpha = 0.1, size = 2) +
@@ -88,9 +88,15 @@ chiro_sand_plot <- ggplot(sand, aes(x = count, y = depth)) +
   scale_y_reverse(breaks = c(breaks = seq(0, 40, by = 5)), 
                   labels = as.character(c(breaks = seq(0, 40, by = 5))),
                   expand = expansion(mult = c(0.02, 0.02))) +
-  facet_geochem_gridh(vars(param)) +
+  facet_geochem_gridh(vars(param),
+                      units = c("Sand > 0.25 mm" = "# cm⁻³")) +
   labs(x = NULL, y = "Depth (cm)") +
-  layer_zone_boundaries(chiro_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black")
+  layer_zone_boundaries(chiro_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black") +
+  rotated_facet_labels(
+    angle = 90,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
 #Concentration and count sum plots-------
 
@@ -103,6 +109,7 @@ tl18_adm <- age_depth_model(
 )
 
 chiro_adds_plot <- chiro_conc %>% 
+  mutate(param = gsub("count_sum", "Count sum", param)) %>% 
   ggplot(aes(x = value, y = Depth)) +
   geom_lineh() +
   geom_point() +
@@ -117,10 +124,17 @@ chiro_adds_plot <- chiro_conc %>%
     age_breaks = c(2019, seq(1700, 2000, by = 20)),
     age_labels = as.character(c(2019, seq(1700, 2000, by = 20)))
   ) +
-  facet_geochem_gridh(vars(param)) +
+  facet_geochem_gridh(vars(param),
+                      units = c("Concentration" = "# cm⁻³",
+                                "CONISS" = "Total sum \n of squares")) +
   labs(x = NULL, y = "Depth (cm)") +
   layer_dendrogram(chiro_coniss, aes(y = Depth), param = "CONISS") +
-  layer_zone_boundaries(chiro_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black")
+  layer_zone_boundaries(chiro_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black") +
+  rotated_facet_labels(
+    angle = 90,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
 #wrap plot-----
 
@@ -151,3 +165,9 @@ ggsave(filename="figures/chiro_wrapped.pdf",
        height = 5,
        units = "in")
 
+ggsave(filename="figures/chiro_wrapped.jpeg",
+       plot = chiro_wrapped_plots,
+       device = jpeg,
+       width = 12.5,
+       height = 5,
+       units = "in")

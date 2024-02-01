@@ -78,7 +78,8 @@ aqps_red <- aqps_aq %>%
   filter(!taxon %in% aqps_zero$taxon) %>% 
   group_by(taxon) %>% 
   filter(max(rel_abund) > 2) %>%
-  ungroup()
+  ungroup() %>% 
+  mutate(taxon = gsub("Potamogeton subgen. Eupotamogeton", "Potamogeton subgen. \n Eupotamogeton", taxon))
 
 write_csv(aqps_red, "data/aqps_red.csv")
 
@@ -109,13 +110,11 @@ aqps_plot <- ggplot(aqps_red, aes(x = rel_abund, y = Depth)) +
                   expand = expansion(mult = c(0.02, 0.02))) +
   layer_zone_boundaries(aqps_coniss, aes(y = Depth), linetype = 2, linewidth = 0.5, colour = "black") +
   rotated_facet_labels(
-    angle = 45,
+    angle = 90,
     direction = "x",
     remove_label_background = TRUE
   )
 
-aqps_plot +
-  rotated_axis_labels(95, "y")
 #sand plot-----------
 
 aqps_sand_plot <- ggplot(sand, aes(x = count, y = depth)) +
@@ -303,6 +302,12 @@ ggsave(filename="figures/aqps_wrapped.pdf",
        height = 5,
        units = "in")
 
+ggsave(filename="figures/aqps_wrapped.jpeg",
+       plot = aqps_wrapped_plots,
+       device = jpeg,
+       width = 12.5,
+       height = 5,
+       units = "in")
 #PCA ----
 aqps_pca_prep <- decostand(aqps_red_trans_prep, method = "normalize", MARGIN = 2)
 
@@ -358,6 +363,13 @@ ggsave(filename="figures/aqps_pca.svg",
 ggsave(filename="figures/aqps_pca.pdf", 
        plot = aqps_pca_plot, 
        device = pdf, 
+       width = 7, 
+       height = 7, 
+       units = "in")
+
+ggsave(filename="figures/aqps_pca.jpeg", 
+       plot = aqps_pca_plot, 
+       device = jpeg, 
        width = 7, 
        height = 7, 
        units = "in")

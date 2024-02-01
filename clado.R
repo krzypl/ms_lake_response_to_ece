@@ -25,7 +25,7 @@ sand <- read_csv("https://raw.githubusercontent.com/krzypl/ms_refininig_history_
   filter(depth <= max(tl18_age$depth)) %>% 
   select(depth, Sand) %>% 
   rename(count = Sand) %>% 
-  mutate(param = "sand", unit = "number per 1 cc")
+  mutate(param = "Sand > 0.25 mm", unit = "number per 1 cc")
 
 #percent diagram-------------
 
@@ -75,7 +75,7 @@ clado_plot <- clado_red %>%
   ggplot(aes(x = rel_abund, y = Depth)) +
   geom_col_segsh() + 
   geom_lineh() +
-  facet_abundanceh(vars(taxon)) +
+  facet_abundanceh(vars(taxon), rotate_facet_labels = 90) +
   labs(x = "Relative abundance (%)", y = "Depth (cm)") +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
              col = "darkblue", lty = 1, alpha = 0.1, size = 2) +
@@ -94,9 +94,15 @@ clado_sand_plot <- ggplot(sand, aes(x = count, y = depth)) +
   scale_y_reverse(breaks = c(breaks = seq(0, 40, by = 5)), 
                   labels = as.character(c(breaks = seq(0, 40, by = 5))),
                   expand = expansion(mult = c(0.02, 0.02))) +
-  facet_geochem_gridh(vars(param)) +
+  facet_geochem_gridh(vars(param),
+                      units = c("Sand > 0.25 mm" = "# cm⁻³")) +
   labs(x = NULL, y = "Depth (cm)") +
-  layer_zone_boundaries(clado_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black")
+  layer_zone_boundaries(clado_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black")+
+  rotated_facet_labels(
+    angle = 90,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
 #Principal curve------
 
@@ -201,7 +207,8 @@ clado_roc_peaks_2plot <- clado_roc_peaks %>%
 clado_adds_plot_prep <- clado_conc %>% 
   add_row(clado_prc_scores) %>%
   filter(!param == "count_sum") %>% 
-  add_row(clado_roc_2join)
+  add_row(clado_roc_2join) %>% 
+  mutate(param = gsub("prc_score", "PrC score", param))
 
 clado_adds_plot <- ggplot(clado_adds_plot_prep, aes(x = value, y = Depth)) +
   geom_lineh() +
@@ -219,10 +226,19 @@ clado_adds_plot <- ggplot(clado_adds_plot_prep, aes(x = value, y = Depth)) +
     age_breaks = c(2019, seq(1700, 2000, by = 20)),
     age_labels = as.character(c(2019, seq(1700, 2000, by = 20)))
   ) +
-  facet_geochem_gridh(vars(param)) +
+  facet_geochem_gridh(vars(param), rotate_axis_labels = 90,
+                                          units = c("Concentration" = "# cm⁻³", 
+                                                    "PrC score" = "21%",
+                                                    "RoC" = NA,
+                                                    "CONISS" = "Total sum \n of squares")) +
   labs(x = NULL, y = "Depth (cm)") +
   layer_dendrogram(clado_coniss, aes(y = Depth), param = "CONISS") +
-  layer_zone_boundaries(clado_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black")
+  layer_zone_boundaries(clado_coniss, aes(y = Depth), linetype = 2, size = 0.5, colour = "black") +
+  rotated_facet_labels(
+    angle = 90,
+    direction = "x",
+    remove_label_background = TRUE
+  )
 
 #wrap plot----------
 
@@ -253,6 +269,12 @@ ggsave(filename="figures/clado_wrapped.pdf",
        height = 5,
        units = "in")
 
+ggsave(filename="figures/clado_wrapped.jpeg",
+       plot = clado_wrapped_plots,
+       device = jpeg,
+       width = 12.5,
+       height = 5,
+       units = "in")
 #PCA ----
 clado_pca_prep <- clado_perc %>% 
   select(Depth, taxon, rel_abund) %>% 
@@ -281,7 +303,7 @@ clado_ve_prep <- clado_pca$CA$eig / clado_pca$tot.chi * 100
 (clado_PC2_ve <- round(((clado_ve_prep / sum(clado_ve_prep))[c(2)]) * 100, digits = 1))#11.1% expl. var.
 
 clado_pca_plot <- ggplot() +
-  labs(y = paste("PC2 (", clado_PC2_ve, "%)", sep = ""), x = paste("PC1 (", clado_PC1_ve, "%)", sep = ""), title = "Borad Pond, TL18-2 clado PCA plot") +
+  labs(y = paste("PC2 (", clado_PC2_ve, "%)", sep = ""), x = paste("PC1 (", clado_PC1_ve, "%)", sep = ""), title = "Borad Pond, TL18-2 Cladocera PCA plot") +
   geom_segment(data = clado_sp_red,
                color = "black", size = 0.7,
                aes(x = 0, y = 0, xend = PC1, yend = PC2),
@@ -313,6 +335,13 @@ ggsave(filename="figures/clado_pca.svg",
 ggsave(filename="figures/clado_pca.pdf", 
        plot = clado_pca_plot, 
        device = pdf, 
+       width = 7, 
+       height = 7, 
+       units = "in")
+
+ggsave(filename="figures/clado_pca.jpeg", 
+       plot = clado_pca_plot, 
+       device = jpeg, 
        width = 7, 
        height = 7, 
        units = "in")

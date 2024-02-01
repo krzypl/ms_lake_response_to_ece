@@ -95,7 +95,7 @@ set.seed(12)
 diatom_rda_apnap <- rda(sqrt(diatom_wide) ~ apnap_prc + Condition(Age, ece_effect), data = expl_var_full)
 
 set.seed(12)
-(diatom_R2adj_apnap <- RsquareAdj(diatom_rda_apnap)$adj.r.squared)#2.8% 
+(diatom_R2adj_apnap <- RsquareAdj(diatom_rda_apnap)$adj.r.squared)#1.8% 
 
 set.seed(12)
 (diatom_anova_apnap <- anova(diatom_rda_apnap, permutations = how(nperm = 999)))#not significant
@@ -163,7 +163,7 @@ clado_wide <- read_csv("data/clado_red.csv") %>%
 clado_rda <- rda(sqrt(clado_wide) ~ ece_effect + Condition(Age, apnap_prc), data = expl_var_full)
 
 set.seed(12)
-(clado_R2adj <- RsquareAdj(clado_rda)$adj.r.squared)#-0.8% 
+(clado_R2adj <- RsquareAdj(clado_rda)$adj.r.squared)#-0.9% 
 
 set.seed(12)
 (clado_anova <- anova(clado_rda, permutations = how(nperm = 999)))#not significant
@@ -179,7 +179,7 @@ set.seed(12)
 clado_rda_age <- rda(sqrt(clado_wide) ~ Age + Condition(apnap_prc, ece_effect), data = expl_var_full)
 
 set.seed(12)
-(clado_R2adj_age <- RsquareAdj(clado_rda_age)$adj.r.squared)#2.7% 
+(clado_R2adj_age <- RsquareAdj(clado_rda_age)$adj.r.squared)#1.1% 
 
 set.seed(12)
 (clado_anova_age <- anova(clado_rda_age, permutations = how(nperm = 999)))#significance level 0.05*
@@ -187,7 +187,7 @@ set.seed(12)
 clado_rda_apnap <- rda(sqrt(clado_wide) ~ apnap_prc + Condition(Age, ece_effect), data = expl_var_full)
 
 set.seed(12)
-(clado_R2adj_apnap <- RsquareAdj(clado_rda_apnap)$adj.r.squared)#1.5% 
+(clado_R2adj_apnap <- RsquareAdj(clado_rda_apnap)$adj.r.squared)#-0.7% 
 
 set.seed(12)
 (clado_anova_apnap <- anova(clado_rda_apnap, permutations = how(nperm = 999)))#not significant
@@ -208,8 +208,8 @@ rda_table <- diatom_rda_tprep[1,] %>%
   mutate(category = factor(category, levels = c("Age", "VS", "ECE", "Age + VS + ECE", "unexplained"))) %>%
   mutate(proxy = gsub("diatom", "Diatoms", proxy),
          proxy = gsub("aqps", "AqPS", proxy),
-         proxy = gsub("clado", "Cladoceran", proxy),
-         proxy = factor(proxy, levels = c("AqPS","Diatoms", "Cladoceran"))) %>% 
+         proxy = gsub("clado", "Cladocerans", proxy),
+         proxy = factor(proxy, levels = c("AqPS","Diatoms", "Cladocerans"))) %>% 
   rename(Category = category)
 
 rda_table_sign <- diatom_rda_tprep[2,] %>% 
@@ -222,8 +222,8 @@ rda_table_sign <- diatom_rda_tprep[2,] %>%
   mutate(stars = cut(pval, breaks = c(-Inf, 0.001, 0.01, 0.05, Inf), label=c("***", "**", "*", ""))) %>% 
   mutate(proxy = gsub("diatom", "Diatoms", proxy),
          proxy = gsub("aqps", "AqPS", proxy),
-         proxy = gsub("clado", "Cladoceran", proxy),
-         proxy = factor(proxy, levels = c("AqPS","Diatoms", "Cladoceran"))) %>% 
+         proxy = gsub("clado", "Cladocerans", proxy),
+         proxy = factor(proxy, levels = c("AqPS","Diatoms", "Cladocerans"))) %>% 
   rename(Category = category)
 
 rda_prop_var_plot <- ggplot(rda_table, aes(x = proxy, y = proportion_of_v_expl, fill = Category)) +
@@ -255,6 +255,13 @@ ggsave(filename="figures/rda_wrap_plot.svg",
 ggsave(filename="figures/rda_wrap_plot.pdf", 
        plot = rda_wrap_plot, 
        device = pdf, 
+       width = 11, 
+       height = 5, 
+       units = "in")
+
+ggsave(filename="figures/rda_wrap_plot.jpeg", 
+       plot = rda_wrap_plot, 
+       device = jpeg, 
        width = 11, 
        height = 5, 
        units = "in")
