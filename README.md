@@ -1,1 +1,1 @@
-# ms_lake_response_to_ece
+#This repo is for the preprint "Impact of extreme coastal events on a brackish lake ecosystem on the Burin Peninsula, Newfoundland, Canada" by Pleskot et al. It contains all the data and codes necessary to reproduce the results of the study.
