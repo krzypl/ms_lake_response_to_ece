@@ -244,7 +244,8 @@ clado_adds_plot <- ggplot(clado_adds_plot_prep, aes(x = value, y = Depth)) +
 
 clado_wrapped_plots <- wrap_plots(
   clado_sand_plot + 
-    theme(strip.background = element_blank(), strip.text.y = element_blank()),
+    theme(strip.background = element_blank(), strip.text.y = element_blank())+
+    labs(title = "(A)"),
   clado_plot +
     theme(axis.text.y.left = element_blank(), axis.ticks.y.left = element_blank()) +
     labs(y = NULL),
@@ -255,26 +256,6 @@ clado_wrapped_plots <- wrap_plots(
   widths = c(1, 10, 2)
 )
 
-ggsave(filename="figures/clado_wrapped.svg",
-       plot = clado_wrapped_plots,
-       device = svg,
-       width = 12.5,
-       height = 5,
-       units = "in")
-
-ggsave(filename="figures/clado_wrapped.pdf",
-       plot = clado_wrapped_plots,
-       device = pdf,
-       width = 12.5,
-       height = 5,
-       units = "in")
-
-ggsave(filename="figures/clado_wrapped.jpeg",
-       plot = clado_wrapped_plots,
-       device = jpeg,
-       width = 12.5,
-       height = 5,
-       units = "in")
 #PCA ----
 clado_pca_prep <- clado_perc %>% 
   select(Depth, taxon, rel_abund) %>% 
@@ -303,7 +284,7 @@ clado_ve_prep <- clado_pca$CA$eig / clado_pca$tot.chi * 100
 (clado_PC2_ve <- round(((clado_ve_prep / sum(clado_ve_prep))[c(2)]) * 100, digits = 1))#11.1% expl. var.
 
 clado_pca_plot <- ggplot() +
-  labs(y = paste("PC2 (", clado_PC2_ve, "%)", sep = ""), x = paste("PC1 (", clado_PC1_ve, "%)", sep = ""), title = "Borad Pond, TL18-2 Cladocera PCA plot") +
+  labs(y = paste("PC2 (", clado_PC2_ve, "%)", sep = ""), x = paste("PC1 (", clado_PC1_ve, "%)", sep = ""), title = "(B)") +
   geom_segment(data = clado_sp_red,
                color = "black", size = 0.7,
                aes(x = 0, y = 0, xend = PC1, yend = PC2),
@@ -323,25 +304,36 @@ clado_pca_plot <- ggplot() +
   geom_vline(xintercept = 0, color = 'black', linewidth = 0.6,linetype=2) + 
   geom_hline(yintercept = 0, color = 'black', linewidth = 0.6,linetype=2) +
   theme(legend.position = "bottom", panel.background = element_rect(fill = "white", colour = "grey50"),
-        panel.grid.major = element_line(color = "grey80", size = 0.2))
+        panel.grid.major = element_line(color = "grey80", size = 0.2)) +
+  theme(legend.position = "right")
 
-ggsave(filename="figures/clado_pca.svg", 
-       plot = clado_pca_plot, 
-       device = svg, 
-       width = 7, 
-       height = 7, 
-       units = "in")
+#final plot --------
 
-ggsave(filename="figures/clado_pca.pdf", 
-       plot = clado_pca_plot, 
-       device = pdf, 
-       width = 7, 
-       height = 7, 
-       units = "in")
+clado_final_plot <- wrap_plots(
+  design = "AAAA
+            #BB#",
+  clado_wrapped_plots,
+  clado_pca_plot,
+  heights = c(5,7)
+)
 
-ggsave(filename="figures/clado_pca.jpeg", 
-       plot = clado_pca_plot, 
+ggsave(filename="figures/clado_final.jpeg", 
+       plot = clado_final_plot, 
        device = jpeg, 
-       width = 7, 
-       height = 7, 
+       width = 12.5, 
+       height = 12, 
+       units = "in")
+
+ggsave(filename="figures/clado_final.pdf", 
+       plot = clado_final_plot, 
+       device = pdf, 
+       width = 12.5, 
+       height = 12, 
+       units = "in")
+
+ggsave(filename="figures/clado_final.svg", 
+       plot = clado_final_plot, 
+       device = svg, 
+       width = 12.5, 
+       height = 12, 
        units = "in")

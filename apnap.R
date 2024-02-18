@@ -54,7 +54,12 @@ conc_coef <- pollen_concentration_reference %>%
 
 apnap_long <- apnap_counts %>% 
   pivot_longer(!Depth, names_to = "taxon", values_to = "count") %>% 
-  filter(!taxon %in% c("Unidentified pollen - corroded", "Unidentified pollen - varia")) 
+  filter(!taxon %in% c("Unidentified pollen - corroded", "Unidentified pollen - varia")) %>% 
+  mutate(taxon = gsub("Filicales monolete", "Polypodiaceae monolete",
+                      taxon),
+         taxon = gsub("Sanguisorba officinalis",
+                      "Sanguisorba officinalis type",
+                      taxon))
 
 apnap_sum <- apnap_long %>% 
   group_by(Depth) %>% 
@@ -103,7 +108,7 @@ apnap_plot <- apnap_red %>%
   ggplot(aes(x = rel_abund, y = Depth)) +
   geom_col_segsh(color = c(rep("darkgreen", 11*42), rep("darkorange", 8*42), rep("brown", 4*42))) +
   geom_lineh(color = "black") +
-  facet_abundanceh(vars(taxon), dont_italicize = (c("type", "undiff.", "group")), rotate_facet_labels = 90) +
+  facet_abundanceh(vars(taxon), dont_italicize = (c("type", "undiff.", "group", "Poaceae", "Cyperaceae", "Polypodiaceae monolete")), rotate_facet_labels = 90) +
   labs(x = "Relative abundance (%)", y = "Depth (cm)") +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
              col = "darkblue", lty = 1, alpha = 0.1, linewidth = 2) +
@@ -242,9 +247,12 @@ apnap_roc_peaks_2plot <- apnap_roc_peaks %>%
 apnap_adds_plot_prep <- apnap_conc %>% 
   add_row(apnap_prc_scores) %>% 
   add_row(apnap_roc_2join) %>% 
-  mutate(param = gsub("prc_score", "PrC score", param))
+  mutate(param = gsub("prc_score", "PrC score", param)) %>% 
+  add_row(tibble(Depth = apnap_counts$Depth,
+                 param = "Zone",
+                 value = NULL))
 
-apnap_adds_plot <- ggplot(apnap_adds_plot_prep, aes(x = value, y = Depth)) +
+apnap_adds_plot_prep2 <- ggplot(apnap_adds_plot_prep, aes(x = value, y = Depth)) +
   geom_lineh() +
   geom_point() +
   geom_point(data = filter(apnap_adds_plot_prep,
@@ -274,8 +282,18 @@ apnap_adds_plot <- ggplot(apnap_adds_plot_prep, aes(x = value, y = Depth)) +
     remove_label_background = TRUE
   )
 
-#wrap plot---------
 
+zone_data <- tibble(param = "Zone", x = 10000000000, y = c(36, 25, 10),
+                    label = c("PZ1", "PZ2", "PZ3"))
+
+apnap_adds_plot <- apnap_adds_plot_prep2 +
+  geom_text(
+    mapping = aes(x = x, y = y, label = label), 
+    data = zone_data,
+    inherit.aes = FALSE
+  )
+
+#wrap plot---------
 apnap_wrapped_plots <- wrap_plots(
   apnap_sand_plot + 
     theme(strip.background = element_blank(), strip.text.y = element_blank()),
@@ -286,7 +304,7 @@ apnap_wrapped_plots <- wrap_plots(
     theme(axis.text.y.left = element_blank(), axis.ticks.y.left = element_blank()) +
     labs(y = NULL),
   nrow = 1,
-  widths = c(1, 10, 3)
+  widths = c(1, 9.8, 3.2)
 )
 
 ggsave(filename="figures/pollen_wrapped.svg",

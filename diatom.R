@@ -39,7 +39,13 @@ sand <- read_csv("https://raw.githubusercontent.com/krzypl/ms_refininig_history_
 #percent diagram-------------
 
 diatom_long <- diatom_counts %>% 
-  pivot_longer(!depth, names_to = "taxon", values_to = "count")
+  pivot_longer(!depth, names_to = "taxon", values_to = "count") %>% 
+  mutate(taxon = gsub("Cocconeis scutelum", "Cocconeis scutellum", taxon),
+         taxon = gsub("Pinnuavis elegans", "Pinnunavis elegans", taxon),
+         taxon = gsub("Planothidium delicaulum",
+                      "Planothidium delicathulum", taxon),
+         taxon = gsub("Achnanthidium peterseni",
+                      "Achnanthidium petersenii", taxon))
 
 diatom_sum <- diatom_long %>% 
   group_by(depth) %>% 

@@ -79,7 +79,11 @@ aqps_red <- aqps_aq %>%
   group_by(taxon) %>% 
   filter(max(rel_abund) > 2) %>%
   ungroup() %>% 
-  mutate(taxon = gsub("Potamogeton subgen. Eupotamogeton", "Potamogeton subgen. \n Eupotamogeton", taxon))
+  mutate(taxon = gsub("Potamogeton subgen. Eupotamogeton",
+                      "Potamogeton subgen. \n Eupotamogeton",
+                      taxon),
+         taxon = gsub("Tetraedron", "Tetraëdron", taxon),
+         taxon = gsub("Isoetes", "Isoëtes", taxon))
 
 write_csv(aqps_red, "data/aqps_red.csv")
 
@@ -101,7 +105,7 @@ aqps_plot <- ggplot(aqps_red, aes(x = rel_abund, y = Depth)) +
   geom_col_segsh() + 
   geom_lineh() +
   facet_geochem_gridh(vars(taxon), 
-                      labeller = purrr::partial(label_species, species_facet = "taxon")) +
+                      labeller = purrr::partial(label_species, species_facet = "taxon", dont_italicize = c("HdV-128B"))) +
   labs(x = "Relative abundance (%)", y = "Depth (cm)") +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
              col = "darkblue", lty = 1, alpha = 0.1, linewidth = 2) +
@@ -237,13 +241,15 @@ aqps_roc_peaks_2plot <- aqps_roc_peaks %>%
   filter(Peak == TRUE)
 
 #combined PrC, RoC, concentration plots----------
-
 aqps_adds_plot_prep <- aqps_conc %>% 
   add_row(aqps_prc_scores) %>%
   add_row(aqps_roc_2join) %>% 
-  mutate(param = gsub("prc_score", "PrC score", param))
+  mutate(param = gsub("prc_score", "PrC score", param)) %>% 
+  add_row(tibble(Depth = age_depth$Depth,
+                 param = "Zone",
+                 value = NULL))
   
-aqps_adds_plot <- ggplot(aqps_adds_plot_prep, aes(x = value, y = Depth)) +
+aqps_adds_plot_prep2 <- ggplot(aqps_adds_plot_prep, aes(x = value, y = Depth)) +
   geom_lineh() +
   geom_point() +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
@@ -273,11 +279,22 @@ aqps_adds_plot <- ggplot(aqps_adds_plot_prep, aes(x = value, y = Depth)) +
     remove_label_background = TRUE
   )
 
+zone_data <- tibble(param = "Zone", x = 10000000000, y = c(30, 10),
+                    label = c("AqZ1", "AqZ2"))
+
+aqps_adds_plot <- aqps_adds_plot_prep2 +
+  geom_text(
+    mapping = aes(x = x, y = y, label = label), 
+    data = zone_data,
+    inherit.aes = FALSE
+  )
+
 #wrap plot---------
 
 aqps_wrapped_plots <- wrap_plots(
   aqps_sand_plot + 
-    theme(strip.background = element_blank(), strip.text.y = element_blank()),
+    theme(strip.background = element_blank(), strip.text.y = element_blank()) +
+    labs(title = "(A)"),
   aqps_plot +
     theme(axis.text.y.left = element_blank(), axis.ticks.y.left = element_blank()) +
     labs(y = NULL),
@@ -285,29 +302,9 @@ aqps_wrapped_plots <- wrap_plots(
     theme(axis.text.y.left = element_blank(), axis.ticks.y.left = element_blank()) +
     labs(y = NULL),
   nrow = 1,
-  widths = c(1, 10, 4)
+  widths = c(1, 11, 3)
 )
 
-ggsave(filename="figures/aqps_wrapped.svg",
-       plot = aqps_wrapped_plots,
-       device = svg,
-       width = 12.5,
-       height = 5,
-       units = "in")
-
-ggsave(filename="figures/aqps_wrapped.pdf",
-       plot = aqps_wrapped_plots,
-       device = pdf,
-       width = 12.5,
-       height = 5,
-       units = "in")
-
-ggsave(filename="figures/aqps_wrapped.jpeg",
-       plot = aqps_wrapped_plots,
-       device = jpeg,
-       width = 12.5,
-       height = 5,
-       units = "in")
 #PCA ----
 aqps_pca_prep <- decostand(aqps_red_trans_prep, method = "normalize", MARGIN = 2)
 
@@ -331,7 +328,7 @@ aqps_ve_prep <- aqps_pca$CA$eig / aqps_pca$tot.chi * 100
 (aqps_PC2_ve <- round(((aqps_ve_prep / sum(aqps_ve_prep))[c(2)]) * 100, digits = 1))#17.7% expl. var.
 
 aqps_pca_plot <- ggplot() +
-  labs(y = paste("PC2 (", aqps_PC2_ve, "%)", sep = ""), x = paste("PC1 (", aqps_PC1_ve, "%)", sep = ""), title = "Borad Pond, TL18-2 AqPS PCA plot") +
+  labs(y = paste("PC2 (", aqps_PC2_ve, "%)", sep = ""), x = paste("PC1 (", aqps_PC1_ve, "%)", sep = ""), title = "(B)") +
   geom_segment(data = aqps_sp_red,
                color = "black", size = 0.7,
                aes(x = 0, y = 0, xend = PC1, yend = PC2),
@@ -351,25 +348,37 @@ aqps_pca_plot <- ggplot() +
   geom_vline(xintercept = 0, color = 'black', linewidth = 0.6,linetype=2) + 
   geom_hline(yintercept = 0, color = 'black', linewidth = 0.6,linetype=2) +
   theme(legend.position = "bottom", panel.background = element_rect(fill = "white", colour = "grey50"),
-        panel.grid.major = element_line(color = "grey80", size = 0.2))
+        panel.grid.major = element_line(color = "grey80", size = 0.2)) +
+  theme(legend.position = "right")
 
-ggsave(filename="figures/aqps_pca.svg", 
-       plot = aqps_pca_plot, 
-       device = svg, 
-       width = 7, 
-       height = 7, 
-       units = "in")
 
-ggsave(filename="figures/aqps_pca.pdf", 
-       plot = aqps_pca_plot, 
-       device = pdf, 
-       width = 7, 
-       height = 7, 
-       units = "in")
+#final figure ------
 
-ggsave(filename="figures/aqps_pca.jpeg", 
-       plot = aqps_pca_plot, 
+aqps_final_plot <- wrap_plots(
+  design = "AAAA
+            #BB#",
+  aqps_wrapped_plots,
+  aqps_pca_plot,
+  heights = c(5,7)
+)
+
+ggsave(filename="figures/aqps_final_plot.jpeg", 
+       plot = aqps_final_plot, 
        device = jpeg, 
-       width = 7, 
-       height = 7, 
+       width = 12.5, 
+       height = 12, 
+       units = "in")
+
+ggsave(filename="figures/aqps_final_plot.pdf", 
+       plot = aqps_final_plot, 
+       device = pdf, 
+       width = 12.5, 
+       height = 12, 
+       units = "in")
+
+ggsave(filename="figures/aqps_final_plot.svg", 
+       plot = aqps_final_plot, 
+       device = svg, 
+       width = 12.5, 
+       height = 12, 
        units = "in")
