@@ -105,10 +105,15 @@ apnap_order <- unique(apnap_red$taxon)
 apnap_plot <- apnap_red %>%
   mutate(taxon = fct_relevel(taxon, apnap_order)) %>% 
   arrange(taxon) %>% 
+  filter(!taxon %in% c("Betula nana type",
+                       "Quercus",
+                       "Thalictrum",
+                       "cf. Ledum type",
+                       "Osmunda")) %>% 
   ggplot(aes(x = rel_abund, y = Depth)) +
-  geom_col_segsh(color = c(rep("darkgreen", 11*42), rep("darkorange", 8*42), rep("brown", 4*42))) +
+  geom_col_segsh(color = c(rep("darkgreen", 9*42), rep("darkorange", 6*42), rep("brown", 3*42))) +
   geom_lineh(color = "black") +
-  facet_abundanceh(vars(taxon), dont_italicize = (c("type", "undiff.", "group", "Poaceae", "Cyperaceae", "Polypodiaceae monolete")), rotate_facet_labels = 90) +
+  facet_abundanceh(vars(taxon), dont_italicize = (c("Filicales monolete", "type", "undiff.", "group", "Poaceae", "Cyperaceae", "Polypodiaceae monolete")), rotate_facet_labels = 90) +
   labs(x = "Relative abundance (%)", y = "Depth (cm)") +
   geom_hline(yintercept = c(5.75, 23.75, 31.75, 35.75),
              col = "darkblue", lty = 1, alpha = 0.1, linewidth = 2) +
